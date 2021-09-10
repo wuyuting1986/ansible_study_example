@@ -1,0 +1,17 @@
+---
+# tasks file for http
+
+- name: install http server
+  package:
+    name: "{{ http_pkg }}"
+    state: present
+
+- name: config http server
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+  notify: restart httpd
+
+- include_tasks: config_fw2http.yml
+
+

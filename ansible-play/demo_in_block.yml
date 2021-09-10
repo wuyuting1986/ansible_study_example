@@ -1,0 +1,14 @@
+---
+- hosts: webserver
+  tasks:
+    - name: install web server
+      block:
+      - name: install httpd
+        yum:
+          name: httpd
+          state: present
+      - name: install php
+        package:
+          name: php
+          state: present
+      when: ansible_hostname in groups['test']

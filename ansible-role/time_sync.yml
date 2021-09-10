@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  vars:
+    timesync_ntp_servers:
+      - hostname: ntp.aliyun.com
+    iburst: yes
+    timezone: 'Asia/Shanghai'
+
+  roles:
+    - rhel-system-roles.timesync
+
+  tasks:
+    - name: set timezone
+      timezone:
+        name: "{{ timezone }}"
+

@@ -1,0 +1,15 @@
+http_port: 8080
+
+packages:
+  - httpd
+  - php
+
+users:
+  - user1:
+    name: wxh
+    uid: 2000
+    group: admin
+  - user2:
+    name: joe
+    uid: 2000
+    group: demo

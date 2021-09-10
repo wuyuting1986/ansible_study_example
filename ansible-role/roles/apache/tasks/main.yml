@@ -1,0 +1,36 @@
+---
+# tasks file for apache
+- name: install the latest of httpd
+  yum:
+    name: "{{ web_pkg }}"
+    state: latest
+
+- name: copy apache config
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+  notify: restart httpd
+
+- name: Start httpd and firewalld
+  service:
+    name: '{{ item }}'
+    state: started
+    enabled: yes
+  loop:
+    - "{{ web_svc }}"
+    - "{{ fw_svc }}"
+    
+- name: config httpd in firewalld
+  firewalld:
+    service: "{{ rule }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: config http_port in firewalld
+  firewalld:
+    port: "{{ http_port }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+

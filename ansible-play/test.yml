@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  vars_files:
+    - vars/file_vars.yml
+    - vars/secret.yml
+  become: true
+  tasks:
+    - name: create the user "{{ users.user1.name }}"
+      user:
+        name: "{{ users.user1.name }}"
+        groups: "{{ users.user1.group }}"
+      register: res
+    - debug:
+        var: res
+  

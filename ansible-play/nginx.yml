@@ -1,0 +1,56 @@
+---
+- hosts: webservers
+  vars:
+    http_port: 80
+  tasks:
+    - name: deploy nginx
+      block:
+      - name: install nginx
+        yum:
+          name: nginx
+          state: present
+      - name: configure nginx
+        template:
+          src: nginx.conf.j2
+          dest: /etc/nginx/nginx.conf
+        notify: restart nginx
+      - name: start nginx
+        service:
+          name: nginx
+          state: started
+      when: ansible_hostname == 'server1'
+    
+    - name: deploy apache server
+      block:
+      - name: install the latest version of Apache
+        yum:
+          name: httpd
+          state: latest
+
+      - name: copy apache config
+        template:
+          src: httpd.conf.j2
+          dest: /etc/httpd/conf/httpd.conf
+        notify: restart httpd
+
+      - name: Start service httpd
+        service:
+          name: httpd
+          state: started
+          enabled: yes
+      - name: create index.html
+        copy:
+          content: "{{ ansible_hostname }}\n"
+          dest: /var/www/html/index.html
+
+      when: ansible_hostname in groups['apache']
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted

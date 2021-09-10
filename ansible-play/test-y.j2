@@ -1,0 +1,6 @@
+主机IP：{{ ansible_facts['default_ipv4']['address'] }}
+主机名：{{ ansible_facts['hostname'] }}
+
+{% for host in groups['webservers'] %}
+{{ hostvars[host]['ansible_default_ipv4']['address']}}  {{ hostvars[host]['ansible_hostname'] }}
+{% endfor %}

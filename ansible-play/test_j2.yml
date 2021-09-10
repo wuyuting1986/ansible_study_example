@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: jinja2 template
+      template:
+        src: test-y.j2
+        dest: /tmp/test.txt
+

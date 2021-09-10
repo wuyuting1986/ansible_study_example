@@ -1,0 +1,13 @@
+---
+
+- hosts: server1
+  roles:
+    - http
+
+- hosts: localhost
+  tasks:
+    - name: check http server
+      uri:
+        url: http://server1:8088
+        return_content: yes
+        status_code: 200

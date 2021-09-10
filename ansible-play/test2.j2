@@ -1,0 +1,8 @@
+{# /etc/hosts line #}
+主机IP: {{ ansible_facts['default_ipv4']['address'] }}
+主机名: {{ ansible_facts['hostname'] }}
+系统内核: {{ ansible_kernel }}
+
+{% for host in groups['webservers'] %}
+   {{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }} {{ hostvars[host]['ansible_facts']['hostname'] }}
+{% endfor %}

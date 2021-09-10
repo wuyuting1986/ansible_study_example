@@ -1,0 +1,102 @@
+---
+- hosts: all
+  force_handlers: yes
+  gather_facts: true
+  vars:
+    - packages:
+      - httpd
+      - php
+    - webservices:
+      - httpd
+      - firewalld
+  vars_files:
+    - vars/file_vars.yml
+
+  tasks:
+    - name: Set authorized key taken from file
+      authorized_key:
+        user: devops
+        state: present
+        key: "{{ lookup('file', '/home/devops/.ssh/id_rsa.pub') }}"
+
+    - name: install and config web related service
+      block:         
+      - name: install the latest of httpd
+        yum:
+          name: "{{ packages }}"
+          state: latest
+
+      - name: copy apache config
+        template:
+          src: httpd.conf.j2
+          dest: /etc/httpd/conf/httpd.conf
+        notify: restart httpd
+ 
+      - name: Start service httpd, if not started
+        service:
+          name: httpd
+          state: started
+
+      - name: Start firewalld
+        service:
+          name: firewalld
+          state: started
+
+      - name: Start httpd and firewalld
+        service:
+          name: '{{ item }}'
+          state: started
+          enabled: yes
+        loop:
+          - httpd
+          - firewalld
+      when: ansible_hostname in groups['test']
+    
+    - name: Start httpd and firewalld with vars
+      service:
+        name: '{{ item }}'
+        state: started
+        enabled: yes
+      loop: '{{ webservices }}'
+        
+    - name: config httpd in firewalld
+      firewalld:
+        service: http
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: config http_port in firewalld
+      firewalld:
+        port: "{{ http_port }}/tcp"
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+#    - name: test web server
+#      uri:
+#        url: http://server1:{{ http_port }}
+#        return_content: yes
+#        status_code: 200
+
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
+
+- hosts: localhost
+  vars_files:
+    - vars/file_vars.yml
+  tasks:
+    - name: test web server
+      uri:
+        url: http://server1:{{ http_port }}
+        return_content: yes
+        status_code: 200
+      tags: t1
+      register: res
+    - debug:
+        var: res         
+      tags: t1
+       

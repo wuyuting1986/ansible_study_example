@@ -1,0 +1,5 @@
+---
+- src: git@github.com:wuyuting1986/http_install.git
+  scm: git
+  version: master
+  name: deploy_apache

@@ -1,0 +1,13 @@
+---
+- name: add http service in fw
+  firewalld:
+    service: "{{ http_svc }}"
+    permanent: yes
+    state: enabled
+
+
+- name: add http port in fw
+  firewalld:
+    port: "{{ http_port }}/tcp"
+    permanent: yes
+    state: enabled

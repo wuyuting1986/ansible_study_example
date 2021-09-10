@@ -1,0 +1,13 @@
+[nginx]
+server1
+
+[apache]
+server2
+server3
+
+[webservers]
+
+[servers:children]
+apache
+nginx
+webservers

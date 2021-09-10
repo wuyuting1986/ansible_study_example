@@ -1,0 +1,20 @@
+---
+- hosts: server1
+  pre_tasks:
+    - name: deploy apache webserver
+      debug:
+        msg: "deploy apache webserver"
+
+  roles:
+    - myvhost
+
+  post_tasks:
+   # - name: create vhost directory
+   #   file:
+   #     path: "/var/www/vhosts/{{ ansible_hostname }}/"
+   #     state: directory
+    - name: copy html index
+      copy:
+        #content: "welcome to shanghai\n"
+        src: files/html/
+        dest: "/var/www/vhosts/{{ ansible_hostname }}/"

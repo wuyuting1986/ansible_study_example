@@ -1,0 +1,5 @@
+---
+# vars file for http
+
+http_pkg: httpd
+http_svc: http

@@ -1,0 +1,18 @@
+- hosts: server2
+  vars:
+    selinux_state: enforcing
+  tasks:
+  - name: apple selinux role  
+    block:
+      - include_role:
+          name: rhel-system-roles.selinux
+    rescue:
+      - name: check for failure  
+        fail:
+        when: not selinux_reboot_required
+      - name: restart host
+        reboot:
+      - name: Reapply selinux role  
+        include_role:
+          name: rhel-system-roles.selinux
+

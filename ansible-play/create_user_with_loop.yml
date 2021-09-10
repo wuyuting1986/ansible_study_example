@@ -1,0 +1,25 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: create users
+      user:
+        name: "{{ item.name }}"
+        password: "{{ item.pass | password_hash('sha512')}}"
+        state: present
+      loop:
+        - name: user1
+          pass: redhat
+        - name: user2
+          pass: redhat
+
+- hosts: localhost
+  vars_files: 
+    - vars/userlist.yml
+  tasks:
+    - name: create users
+      user:
+        name: "{{ item.name }}"
+        password: "{{ item.pass | password_hash('sha512')}}"
+        state: present
+      loop: '{{ useraddlist}}'

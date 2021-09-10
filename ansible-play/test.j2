@@ -1,0 +1,9 @@
+{# /etc/hosts line #}
+{{ ansible_facts['default_ipv4']['address'] }}   {{ ansible_facts['hostname'] }}
+{{ ansible_hostname }}
+{{ ansible_kernel }}
+
+
+{% for host in groups['webserver'] %}
+{{ hostvars[host]['ansible_default_ipv4']['address']}}  {{ hostvars[host]['ansible_hostname'] }}
+{% endfor %}

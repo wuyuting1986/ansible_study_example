@@ -1,0 +1,15 @@
+---
+
+- hosts: server1
+  pre_tasks:
+    - name: deploy apache server
+      debug:
+        msg: "deploy apache webserver"
+  roles:
+    - apache
+
+  post_tasks:
+    - name: copy web index file
+      copy:
+        src: files/html/
+        dest: /var/www/html/ 

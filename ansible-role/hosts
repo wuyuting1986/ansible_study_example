@@ -1,0 +1,14 @@
+[all]
+server1
+server2
+
+[webserver:children]
+prod
+test
+
+[prod]
+server1
+
+[test]
+server2
+

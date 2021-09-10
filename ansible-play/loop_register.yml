@@ -1,0 +1,16 @@
+- hosts: localhost
+  gather_facts: no
+  become: no
+  tasks:
+    - name: loop echo
+      shell: "echo This is my item: {{ item }}"
+      loop:
+        - one
+        - two
+      register: echo_result
+
+    - name: show variable
+      debug:
+        #var: echo_result
+        msg: "stdout from task: {{ item.stdout }}"
+      loop: "{{ echo_result['results'] }}"
